@@ -24,3 +24,6 @@ example/android/app/.classpath
 example/android/app/.project
 example/android/app/.settings/
 
+#Jetbrains artifacts
+.idea
+*.iml
