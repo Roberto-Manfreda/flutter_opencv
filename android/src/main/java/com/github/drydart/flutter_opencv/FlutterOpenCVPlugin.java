@@ -30,7 +30,8 @@ public class FlutterOpenCVPlugin implements MethodCallHandler {
     @Override
     public void onMethodCall(final MethodCall call, final Result result) {
         Scalar scalar;
-        List<Double> l;
+        List<Double> doubleList;
+        double doubleValue;
 
         switch (call.method) {
             case "getBuildInformation":
@@ -39,23 +40,43 @@ public class FlutterOpenCVPlugin implements MethodCallHandler {
             case "getVersionString":
                 result.success(org.opencv.core.Core.getVersionString());
                 break;
+            // TODO Some stuff can be simplified here
+            // TODO I want to try exchanging values as json too... maybe can be a better choice
+            case "all":
+                // Creating new Scalar object from flutter invocation arguments
+                doubleValue = call.arguments();
+                scalar = Scalar.all(doubleValue);
 
-            case "set":
-                l = call.arguments();
-                scalar = new Scalar(l.get(0), l.get(1), l.get(2), l.get(3));
-                scalar.set(scalar.val);
-
-                // Converting into List to not break messageCodec
-                l = new ArrayList<>();
+                // Converting double[] into List<Double> to not break messageCodec
+                doubleList = new ArrayList<>();
                 for (double d : scalar.val) {
-                    l.add(d);
+                    doubleList.add(d);
                 }
 
-                result.success(l);
+                // Return a List<Double> object to set as val field
+                result.success(doubleList);
+                break;
+            case "set":
+                // Creating new Scalar object from flutter invocation arguments
+                doubleList = call.arguments();
+                scalar = new Scalar(doubleList.get(0), doubleList.get(1), doubleList.get(2), doubleList.get(3));
+                scalar.set(scalar.val);
+
+                // Converting double[] into List<Double> to not break messageCodec
+                doubleList = new ArrayList<>();
+                for (double d : scalar.val) {
+                    doubleList.add(d);
+                }
+
+                // Return a List<Double> object to set as val field
+                result.success(doubleList);
                 break;
             case "isReal":
-                l = call.arguments();
-                scalar = new Scalar(l.get(0), l.get(1), l.get(2), l.get(3));
+                // Creating new Scalar object from flutter invocation arguments
+                doubleList = call.arguments();
+                scalar = new Scalar(doubleList.get(0), doubleList.get(1), doubleList.get(2), doubleList.get(3));
+
+                // Return true if the scalar isReal else return false
                 result.success(scalar.isReal());
                 break;
             default:

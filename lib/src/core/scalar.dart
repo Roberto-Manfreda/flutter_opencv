@@ -14,7 +14,7 @@ class Scalar {
   // Method channel
   static const MethodChannel _channel = MethodChannel('flutter_opencv');
 
-  //Fields
+  //Fields__
   List<double> _val = [];
 
   // Constructor
@@ -25,30 +25,27 @@ class Scalar {
     null != v3 ? _val.add(v3) : _val.add(0);
   }
 
-  // Methods
+  // Methods__
+  static Future<Scalar> all(double value) async {
+    List<dynamic> result = await _channel.invokeMethod("all", value);
+    return new Scalar(v0: result[0], v1: result[1], v2: result[2], v3: result[3]);
+  }
+
   Future<void> set(List<double> vals) async {
-    Completer completer = new Completer();
-
-    List<double> list = new List();
-    list.addAll(vals);
-
-    await _channel.invokeMethod("set", list).then((result) {
+    await _channel.invokeMethod("set", vals).then((result) {
       _val = new List();
 
       for (double d in result) {
-        print(d);
         _val.add(d);
       }
-
     });
   }
 
   Future<bool> isReal() async {
-    List<double> l = new List();
-    l.addAll(_val);
-    return await _channel.invokeMethod("isReal", l) as bool;
+    return await _channel.invokeMethod("isReal", _val);
   }
 
+  // Overrides__
   @override
   String toString() {
     return 'Scalar{_val: $_val}';

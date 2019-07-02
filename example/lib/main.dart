@@ -33,25 +33,32 @@ class _MyAppState extends State<MyApp> {
       versionString = "Failed to get OpenCV version.";
     }
 
+    // These try blocks at the moment are here for testing purposes
+    // TODO Implement test cases
+    try {
+      cv.Scalar scalar = await cv.Scalar.all(3.0);
+      debugPrint("\nScalar.all(3.0): " + scalar.toString());
+    } on Exception catch(e) {
+      debugPrint(e.toString());
+    }
+
     try {
       cv.Scalar scalar = new cv.Scalar(v0: 0, v1: 0, v2: 0/*,v3: 0*/);
       bool result = await scalar.isReal();
-      debugPrint("the result is: " + result.toString());
-    }
-    on PlatformException {
-      debugPrint("error");
+      debugPrint("\n\scalar.isReal(): " + result.toString());
+    } on Exception catch(e) {
+      debugPrint(e.toString());
     }
 
     try {
       cv.Scalar scalar = new cv.Scalar();
-      debugPrint("Before: " + scalar.toString());
+      debugPrint("\nBefore scalar.set(): " + scalar.toString());
       await scalar.set([1, 2, 3, 3]);
-      debugPrint("After: " + scalar.toString());
+      debugPrint("After scalar.set(): " + scalar.toString());
+    } on Exception catch(e) {
+      debugPrint(e.toString());
     }
-    on PlatformException {
-      debugPrint("error");
-    }
-
+    //____ End temp tests
 
     // If the widget was removed from the tree while the asynchronous platform
     // message was in flight, we want to discard the reply rather than calling
