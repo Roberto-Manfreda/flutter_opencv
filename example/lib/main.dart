@@ -33,6 +33,26 @@ class _MyAppState extends State<MyApp> {
       versionString = "Failed to get OpenCV version.";
     }
 
+    try {
+      cv.Scalar scalar = new cv.Scalar(v0: 0, v1: 0, v2: 0/*,v3: 0*/);
+      bool result = await scalar.isReal();
+      debugPrint("the result is: " + result.toString());
+    }
+    on PlatformException {
+      debugPrint("error");
+    }
+
+    try {
+      cv.Scalar scalar = new cv.Scalar();
+      debugPrint("Before: " + scalar.toString());
+      await scalar.set([1, 2, 3, 3]);
+      debugPrint("After: " + scalar.toString());
+    }
+    on PlatformException {
+      debugPrint("error");
+    }
+
+
     // If the widget was removed from the tree while the asynchronous platform
     // message was in flight, we want to discard the reply rather than calling
     // setState to update our non-existent appearance.
