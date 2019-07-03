@@ -10,6 +10,17 @@ OpenCV Bindings for Flutter
 This is a [Flutter](https://flutter.io/) plugin that bundles and wraps
 the [OpenCV](https://opencv.org) computer-vision library for Java.
 
+Getting Started
+---------------
+1) Clone or fork the project, flutter_opencv.  
+2) Open flutter_opencv in Android studio and wait for complete loading, from here you will modify Dart code.  
+3) From the Studio window click on file -> open -> select flutter_opencv/example/android folder and open it in a new window, from here you will modify Android code.  
+4) Open a terminal and cd in the base flutter_opencv folder.  
+`flutter clean`  
+`flutter packages pub run build_runner clean`  
+`flutter packages get`  
+`flutter packages pub run build_runner build --delete-conflicting-outputs`
+
 Features
 --------
 
