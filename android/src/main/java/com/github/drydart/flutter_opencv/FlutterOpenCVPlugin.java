@@ -1,10 +1,13 @@
 package com.github.drydart.flutter_opencv;
 
+import com.google.gson.Gson;
+
 import org.bytedeco.javacpp.Loader;
 import org.opencv.core.Scalar;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
@@ -29,9 +32,8 @@ public class FlutterOpenCVPlugin implements MethodCallHandler {
 
     @Override
     public void onMethodCall(final MethodCall call, final Result result) {
-        Scalar scalar;
-        List<Double> doubleList;
-        double doubleValue;
+
+        Gson gson = new Gson();
 
         switch (call.method) {
             case "getBuildInformation":
@@ -40,44 +42,46 @@ public class FlutterOpenCVPlugin implements MethodCallHandler {
             case "getVersionString":
                 result.success(org.opencv.core.Core.getVersionString());
                 break;
-            // TODO Some stuff can be simplified here
-            // TODO I want to try exchanging values as json too... maybe can be a better choice
-            case "all":
-                // Creating new Scalar object from flutter invocation arguments
-                doubleValue = call.arguments();
-                scalar = Scalar.all(doubleValue);
-
-                // Converting double[] into List<Double> to not break messageCodec
-                doubleList = new ArrayList<>();
-                for (double d : scalar.val) {
-                    doubleList.add(d);
-                }
-
-                // Return a List<Double> object to set as val field
-                result.success(doubleList);
-                break;
             case "set":
-                // Creating new Scalar object from flutter invocation arguments
-                doubleList = call.arguments();
-                scalar = new Scalar(doubleList.get(0), doubleList.get(1), doubleList.get(2), doubleList.get(3));
+                List<Double> doubleList = call.arguments();
+                Scalar scalar = new Scalar(doubleList.get(0), doubleList.get(1), doubleList.get(2), doubleList.get(3));
                 scalar.set(scalar.val);
-
-                // Converting double[] into List<Double> to not break messageCodec
-                doubleList = new ArrayList<>();
-                for (double d : scalar.val) {
-                    doubleList.add(d);
+                result.success(gson.toJson(scalar));
+                break;
+            case "all":
+                result.success(gson.toJson(Scalar.all(call.arguments())));
+                break;
+            case "clone":
+                String json = call.arguments();
+                Scalar origin = gson.fromJson(json, Scalar.class);
+                Scalar cloned = origin.clone();
+                result.success(gson.toJson(cloned));
+                break;
+            case "mul":
+                Map<String, String> args = call.arguments();
+                String json1 = args.get("json");
+                String scaleStr = args.get("scale");
+                if (null == scaleStr) {
+                    Scalar origin1 = gson.fromJson(json1, Scalar.class);
+                    Scalar multiplied = origin1.mul(origin1);
+                    result.success(gson.toJson(multiplied));
+                } else {
+                    double scale = Double.valueOf(scaleStr);
+                    Scalar origin1 = gson.fromJson(json1, Scalar.class);
+                    Scalar multiplied = origin1.mul(origin1, scale);
+                    result.success(gson.toJson(multiplied));
                 }
-
-                // Return a List<Double> object to set as val field
-                result.success(doubleList);
+                break;
+            case "conj":
+                String json2 = call.arguments();
+                Scalar origin1 = gson.fromJson(json2, Scalar.class);
+                Scalar conjed = origin1.conj();
+                result.success(gson.toJson(conjed));
                 break;
             case "isReal":
-                // Creating new Scalar object from flutter invocation arguments
-                doubleList = call.arguments();
-                scalar = new Scalar(doubleList.get(0), doubleList.get(1), doubleList.get(2), doubleList.get(3));
-
-                // Return true if the scalar isReal else return false
-                result.success(scalar.isReal());
+                List<Double> doubleList1 = call.arguments();
+                Scalar scalar1 = new Scalar(doubleList1.get(0), doubleList1.get(1), doubleList1.get(2), doubleList1.get(3));
+                result.success(scalar1.isReal());
                 break;
             default:
                 result.notImplemented();

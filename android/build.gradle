@@ -49,4 +49,6 @@ dependencies {
     compile 'org.bytedeco.javacpp-presets:opencv:3.4.3-1.4.3:android-x86_64'
     //compile 'org.bytedeco.javacpp-presets:opencv:3.4.3-1.4.3:ios-arm64'
     //compile 'org.bytedeco.javacpp-presets:opencv:3.4.3-1.4.3:ios-x86_64'
+
+    implementation 'com.google.code.gson:gson:2.8.5'
 }
