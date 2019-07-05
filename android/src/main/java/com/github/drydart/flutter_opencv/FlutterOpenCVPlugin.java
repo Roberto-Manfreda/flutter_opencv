@@ -1,11 +1,12 @@
 package com.github.drydart.flutter_opencv;
 
+import com.github.drydart.flutter_opencv.bridges.Informations;
+import com.github.drydart.flutter_opencv.bridges.ScalarBridge;
 import com.google.gson.Gson;
 
 import org.bytedeco.javacpp.Loader;
 import org.opencv.core.Scalar;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -30,61 +31,50 @@ public class FlutterOpenCVPlugin implements MethodCallHandler {
         channel.setMethodCallHandler(new FlutterOpenCVPlugin());
     }
 
+    private void handleClass(final MethodCall call, final Result result) {
+        Map<String, Object> map = call.arguments();
+        String callingClass = (String) map.get("class");
+        String method = call.method;
+        Object arguments = map.get("arguments");
+
+        switch (callingClass) {
+            case "Informations": {
+                Informations bridge = new Informations();
+                break;
+            }
+            case "Scalar": {
+                ScalarBridge bridge = new ScalarBridge();
+                bridge.handleMethod(method, arguments, result);
+                break;
+            }
+            default:
+                result.notImplemented();
+        }
+    }
+
     @Override
     public void onMethodCall(final MethodCall call, final Result result) {
+        // TODO Remove this flag
+        boolean passed = false;
 
-        Gson gson = new Gson();
-
+        // TODO and these calls from here, manage in a class
         switch (call.method) {
             case "getBuildInformation":
                 result.success(org.opencv.core.Core.getBuildInformation());
+                passed = true;
                 break;
             case "getVersionString":
+                passed = true;
                 result.success(org.opencv.core.Core.getVersionString());
                 break;
-            case "set":
-                List<Double> doubleList = call.arguments();
-                Scalar scalar = new Scalar(doubleList.get(0), doubleList.get(1), doubleList.get(2), doubleList.get(3));
-                scalar.set(scalar.val);
-                result.success(gson.toJson(scalar));
-                break;
-            case "all":
-                result.success(gson.toJson(Scalar.all(call.arguments())));
-                break;
-            case "clone":
-                String json = call.arguments();
-                Scalar origin = gson.fromJson(json, Scalar.class);
-                Scalar cloned = origin.clone();
-                result.success(gson.toJson(cloned));
-                break;
-            case "mul":
-                Map<String, String> args = call.arguments();
-                String json1 = args.get("json");
-                String scaleStr = args.get("scale");
-                if (null == scaleStr) {
-                    Scalar origin1 = gson.fromJson(json1, Scalar.class);
-                    Scalar multiplied = origin1.mul(origin1);
-                    result.success(gson.toJson(multiplied));
-                } else {
-                    double scale = Double.valueOf(scaleStr);
-                    Scalar origin1 = gson.fromJson(json1, Scalar.class);
-                    Scalar multiplied = origin1.mul(origin1, scale);
-                    result.success(gson.toJson(multiplied));
-                }
-                break;
-            case "conj":
-                String json2 = call.arguments();
-                Scalar origin1 = gson.fromJson(json2, Scalar.class);
-                Scalar conjed = origin1.conj();
-                result.success(gson.toJson(conjed));
-                break;
-            case "isReal":
-                List<Double> doubleList1 = call.arguments();
-                Scalar scalar1 = new Scalar(doubleList1.get(0), doubleList1.get(1), doubleList1.get(2), doubleList1.get(3));
-                result.success(scalar1.isReal());
-                break;
-            default:
-                result.notImplemented();
+        }
+
+        if (passed) return;
+
+        try {
+            handleClass(call, result);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

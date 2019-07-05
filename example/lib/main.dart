@@ -121,7 +121,7 @@ class _MyAppState extends State<MyApp> {
     } on Exception catch(e) {
       debugPrint(e.toString());
     }
-    //____ End temp tests
+    //____ End temp tests*/
 
     // If the widget was removed from the tree while the asynchronous platform
     // message was in flight, we want to discard the reply rather than calling
