@@ -29,16 +29,29 @@ class _MyAppState extends State<MyApp> {
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState() async {
     String versionString;
-    // Platform messages may fail, so we use a try/catch PlatformException.
+
+    // getVersionString()
     try {
-      versionString = await cv.versionString;
-    }
-    on PlatformException {
+      cv.Information information = cv.Information();
+      versionString = await information.getVersionString();
+      printSeparator("Testing getVersionString()");
+      debugPrint("OpenCV version: " + versionString);
+    } on PlatformException {
       versionString = "Failed to get OpenCV version.";
     }
 
     // These try blocks at the moment are here for testing purposes
     // TODO Implement test cases
+    // getBuildInformation()
+    try {
+      cv.Information information = cv.Information();
+      String buildInfo = await information.getBuildInformation();
+      printSeparator("Testing getBuildInformation()");
+      debugPrint("Build Info: " + buildInfo);
+    } on PlatformException {
+      versionString = "Failed to get OpenCV version.";
+    }
+
     // set()
     try {
       printSeparator("Testing set()");

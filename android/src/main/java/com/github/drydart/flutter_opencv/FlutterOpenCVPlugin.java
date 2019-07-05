@@ -1,14 +1,12 @@
 package com.github.drydart.flutter_opencv;
 
-import com.github.drydart.flutter_opencv.bridges.Informations;
+import com.github.drydart.flutter_opencv.bridges.InformationBridge;
 import com.github.drydart.flutter_opencv.bridges.ScalarBridge;
-import com.google.gson.Gson;
 
 import org.bytedeco.javacpp.Loader;
-import org.opencv.core.Scalar;
 
-import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
@@ -33,13 +31,14 @@ public class FlutterOpenCVPlugin implements MethodCallHandler {
 
     private void handleClass(final MethodCall call, final Result result) {
         Map<String, Object> map = call.arguments();
-        String callingClass = (String) map.get("class");
+        String callingClass = (String) Objects.requireNonNull(map.get("class"));
         String method = call.method;
-        Object arguments = map.get("arguments");
+        Object arguments = Objects.requireNonNull(map.get("arguments"));
 
         switch (callingClass) {
-            case "Informations": {
-                Informations bridge = new Informations();
+            case "Information": {
+                InformationBridge bridge = new InformationBridge();
+                bridge.handleMethod(method, arguments, result);
                 break;
             }
             case "Scalar": {
@@ -54,23 +53,6 @@ public class FlutterOpenCVPlugin implements MethodCallHandler {
 
     @Override
     public void onMethodCall(final MethodCall call, final Result result) {
-        // TODO Remove this flag
-        boolean passed = false;
-
-        // TODO and these calls from here, manage in a class
-        switch (call.method) {
-            case "getBuildInformation":
-                result.success(org.opencv.core.Core.getBuildInformation());
-                passed = true;
-                break;
-            case "getVersionString":
-                passed = true;
-                result.success(org.opencv.core.Core.getVersionString());
-                break;
-        }
-
-        if (passed) return;
-
         try {
             handleClass(call, result);
         } catch (Exception e) {

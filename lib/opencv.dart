@@ -4,3 +4,4 @@
 library opencv;
 
 export 'src/core.dart';
+export 'src/information.dart';

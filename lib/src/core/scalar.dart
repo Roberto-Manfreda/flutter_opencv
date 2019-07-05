@@ -1,27 +1,21 @@
 /* This is free and unencumbered software released into the public domain. */
 
-import 'dart:async';
 import 'dart:convert';
-import 'package:flutter/services.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-part 'scalar.g.dart';
+import '../data_exchanger.dart';
 
+part 'scalar.g.dart';
 /// Class for a 4-element vector derived from [Vec].
 ///
 /// See: https://docs.opencv.org/3.4.3/d1/da0/classcv_1_1Scalar__.html
 ///
 /// See: http://bytedeco.org/javacpp-presets/opencv/apidocs/org/opencv/core/Scalar.html
 @JsonSerializable()
-class Scalar {
+class Scalar extends DataExchanger {
 
   //Fields__
   List<double> val = [];
-
-  // Helper Fields__
-  // TODO extends some other class
-  static const MethodChannel _channel = MethodChannel('flutter_opencv');
-  static Map<String, dynamic> map = new Map();
 
   // Constructors__
   Scalar({double v0, double v1, double v2, double v3}) {
@@ -37,16 +31,17 @@ class Scalar {
   Future<void> set(List<double> vals) async {
     setMapParams("Scalar", vals);
 
-    String json = await _channel.invokeMethod("set", map);
+    String json = await channel.invokeMethod("set", map);
     Map scalarMap = jsonDecode(json);
     Scalar scalar = Scalar.fromJson(scalarMap);
     this.val = scalar.val;
   }
 
   static Future<Scalar> all(double value) async {
-    setMapParams("Scalar", value);
+    DataExchanger exchanger = DataExchanger();
+    exchanger.setMapParams("Scalar", value);
 
-    String json = await _channel.invokeMethod("all", map);
+    String json = await exchanger.channel.invokeMethod("all", exchanger.map);
     Map scalarMap = jsonDecode(json);
     return Scalar.fromJson(scalarMap);
   }
@@ -54,7 +49,7 @@ class Scalar {
   Future<Scalar> clone() async {
     setMapParams("Scalar", getObjAsJson());
 
-    String json = await _channel.invokeMethod("clone", map);
+    String json = await channel.invokeMethod("clone", map);
     Map scalarMap = jsonDecode(json);
     return Scalar.fromJson(scalarMap);
   }
@@ -66,7 +61,7 @@ class Scalar {
 
     setMapParams("Scalar", parameters);
 
-    String json = await _channel.invokeMethod("mul", map);
+    String json = await channel.invokeMethod("mul", map);
     Map scalarMap = jsonDecode(json);
     return Scalar.fromJson(scalarMap);
   }
@@ -74,22 +69,19 @@ class Scalar {
   Future<Scalar> conj() async {
     setMapParams("Scalar", getObjAsJson());
 
-    String json = await _channel.invokeMethod("conj", map);
+    String json = await channel.invokeMethod("conj", map);
     Map scalarMap = jsonDecode(json);
     return Scalar.fromJson(scalarMap);
   }
 
   Future<bool> isReal() async {
     setMapParams("Scalar", this.val);
-    return await _channel.invokeMethod("isReal", map);
+    return await channel.invokeMethod("isReal", map);
   }
 
   // Helpers__
   // TODO extends some other class
-  static void setMapParams(String className, dynamic arguments) {
-    map["class"] = className;
-    map["arguments"] = arguments;
-  }
+
 
   String getObjAsJson() {
     return this.toJson().toString();
@@ -115,4 +107,5 @@ class Scalar {
 
   @override
   int get hashCode => val.hashCode;
+
 }
