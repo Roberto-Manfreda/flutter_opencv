@@ -58,9 +58,7 @@ class Scalar extends DataExchanger {
     Map<String, String> parameters = new Map();
     parameters["json"] = this.toJson().toString();
     if (null != scale) parameters["scale"] = scale.toString();
-
     setMapParams("Scalar", parameters);
-
     String json = await channel.invokeMethod("mul", map);
     Map scalarMap = jsonDecode(json);
     return Scalar.fromJson(scalarMap);
@@ -80,9 +78,6 @@ class Scalar extends DataExchanger {
   }
 
   // Helpers__
-  // TODO extends some other class
-
-
   String getObjAsJson() {
     return this.toJson().toString();
   }

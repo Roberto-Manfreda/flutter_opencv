@@ -4,7 +4,7 @@ class DataExchanger {
   MethodChannel _channel = MethodChannel("flutter_opencv");
   Map<String, dynamic> _map = Map();
 
-  void setMapParams(String className, [dynamic arguments]) {
+  void setMapParams(String className, [dynamic arguments = ""]) {
     _map["class"] = className;
     _map["arguments"] = arguments;
   }
