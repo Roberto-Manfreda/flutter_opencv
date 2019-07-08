@@ -13,51 +13,58 @@ public class ScalarBridge extends IBridge {
     @SuppressWarnings("unchecked")
     public void handleMethod(String method, Object arguments, MethodChannel.Result result) {
         switch (method) {
-            case "set":
+            case "set": {
                 List<Double> doubleList = (List<Double>) arguments;
                 Scalar originScalar = new Scalar(doubleList.get(0), doubleList.get(1),
                         doubleList.get(2), doubleList.get(3));
                 originScalar.set(originScalar.val);
                 result.success(gson.toJson(originScalar));
                 break;
-            case "all":
+            }
+            case "all": {
                 result.success(gson.toJson(Scalar.all((Double) arguments)));
                 break;
-            case "clone":
+            }
+            case "clone": {
                 String json = (String) arguments;
-                originScalar = gson.fromJson(json, Scalar.class);
+                Scalar originScalar = gson.fromJson(json, Scalar.class);
                 Scalar elaboratedScalar = originScalar.clone();
                 result.success(gson.toJson(elaboratedScalar));
                 break;
-            case "mul":
+            }
+            case "mul": {
                 Map<String, String> args = (Map<String, String>) arguments;
-                json = args.get("json");
+                String json = args.get("json");
                 String scaleStr = args.get("scale");
+
+                Scalar originScalar = gson.fromJson(json, Scalar.class);
+                Scalar elaboratedScalar;
                 if (null == scaleStr) {
-                    originScalar = gson.fromJson(json, Scalar.class);
                     elaboratedScalar = originScalar.mul(originScalar);
-                    result.success(gson.toJson(elaboratedScalar));
                 } else {
                     double scale = Double.valueOf(scaleStr);
-                    originScalar = gson.fromJson(json, Scalar.class);
                     elaboratedScalar = originScalar.mul(originScalar, scale);
-                    result.success(gson.toJson(elaboratedScalar));
                 }
-                break;
-            case "conj":
-                json = (String) arguments;
-                originScalar = gson.fromJson(json, Scalar.class);
-                elaboratedScalar = originScalar.conj();
                 result.success(gson.toJson(elaboratedScalar));
                 break;
-            case "isReal":
+            }
+            case "conj": {
+                String json = (String) arguments;
+                Scalar originScalar = gson.fromJson(json, Scalar.class);
+                Scalar elaboratedScalar = originScalar.conj();
+                result.success(gson.toJson(elaboratedScalar));
+                break;
+            }
+            case "isReal": {
                 List<Double> doubleList1 = (List<Double>) arguments;
-                originScalar = new Scalar(doubleList1.get(0), doubleList1.get(1),
+                Scalar originScalar = new Scalar(doubleList1.get(0), doubleList1.get(1),
                         doubleList1.get(2), doubleList1.get(3));
                 result.success(originScalar.isReal());
                 break;
-            default:
+            }
+            default: {
                 result.notImplemented();
+            }
         }
     }
 

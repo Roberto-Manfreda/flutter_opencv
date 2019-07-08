@@ -1,15 +1,23 @@
 import 'package:flutter/services.dart';
 
-class DataExchanger {
-  MethodChannel _channel = MethodChannel("flutter_opencv");
-  Map<String, dynamic> _map = Map();
+abstract class DataExchanger {
+  static MethodChannel _channel = MethodChannel("flutter_opencv");
+  Map<String, dynamic> _dataMap = Map();
 
-  void setMapParams(String className, [dynamic arguments = ""]) {
-    _map["class"] = className;
-    _map["arguments"] = arguments;
+  static Map<String, dynamic> getDataStatically(String className, [dynamic arguments = ""]){
+    Map<String, dynamic> dataMap = Map();
+    dataMap["class"] = className;
+    dataMap["arguments"] = arguments;
+    return dataMap;
   }
 
-  Map<String, dynamic> get map => _map;
+  void setDataMap(String className, [dynamic arguments = ""]) {
+    _dataMap = getDataStatically(className, arguments);
+  }
 
-  MethodChannel get channel => _channel;
+  String getObjectAsJson();
+
+  Map<String, dynamic> get dataMap => _dataMap;
+
+  static MethodChannel get channel => _channel;
 }

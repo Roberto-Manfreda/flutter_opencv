@@ -6,4 +6,5 @@
 ///
 /// See: http://bytedeco.org/javacpp-presets/opencv/apidocs/org/opencv/core/Range.html
 class Range {
+
 }

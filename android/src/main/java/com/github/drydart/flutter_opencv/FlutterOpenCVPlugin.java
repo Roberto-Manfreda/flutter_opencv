@@ -1,9 +1,11 @@
 package com.github.drydart.flutter_opencv;
 
 import com.github.drydart.flutter_opencv.bridges.InformationBridge;
+import com.github.drydart.flutter_opencv.bridges.RangeBridge;
 import com.github.drydart.flutter_opencv.bridges.ScalarBridge;
 
 import org.bytedeco.javacpp.Loader;
+import org.opencv.core.Range;
 
 import java.util.Map;
 import java.util.Objects;
@@ -29,6 +31,15 @@ public class FlutterOpenCVPlugin implements MethodCallHandler {
         channel.setMethodCallHandler(new FlutterOpenCVPlugin());
     }
 
+    @Override
+    public void onMethodCall(final MethodCall call, final Result result) {
+        try {
+            handleClass(call, result);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private void handleClass(final MethodCall call, final Result result) {
         Map<String, Object> map = call.arguments();
         String callingClass = (String) Objects.requireNonNull(map.get("class"));
@@ -41,22 +52,19 @@ public class FlutterOpenCVPlugin implements MethodCallHandler {
                 bridge.handleMethod(method, arguments, result);
                 break;
             }
+            case "RangeBridge": {
+                RangeBridge bridge = new RangeBridge();
+                bridge.handleMethod(method, arguments, result);
+                break;
+            }
             case "Scalar": {
                 ScalarBridge bridge = new ScalarBridge();
                 bridge.handleMethod(method, arguments, result);
                 break;
             }
-            default:
+            default: {
                 result.notImplemented();
-        }
-    }
-
-    @Override
-    public void onMethodCall(final MethodCall call, final Result result) {
-        try {
-            handleClass(call, result);
-        } catch (Exception e) {
-            e.printStackTrace();
+            }
         }
     }
 }
