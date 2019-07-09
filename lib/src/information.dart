@@ -22,7 +22,6 @@ class Information extends DataExchanger {
 
   @override
   String getObjectAsJson() {
-    // TODO: implement getObjAsJson
-    return null;
+    return "Not Implemented";
   }
 }

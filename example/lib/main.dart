@@ -16,7 +16,8 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   String _versionString = "Unknown";
 
-  bool TEST_SCALAR = true;
+  static const bool TEST_SCALAR = false;
+  static const bool TEST_RANGE = true;
 
   @override
   void initState() {
@@ -26,9 +27,10 @@ class _MyAppState extends State<MyApp> {
 
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState() async {
-    String versionString;
+    String versionString = "OK";
 
-    await testInfo(versionString);
+    //await testInfo(versionString);
+    await testRange();
     await testScalar();
 
     // If the widget was removed from the tree while the asynchronous platform
@@ -55,95 +57,19 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
-  void printSeparator(String s) {
-    print("\n--------------" + s +"--------------");
-  }
-
-  Future<void> testScalar() async {
-    if (TEST_SCALAR) {
+  Future<void> testRange() async {
+    if (TEST_RANGE) {
+      printSeparator("TESTING RANGE");
       // set()
       try {
         printSeparator("Testing set()");
-        cv.Scalar scalar = new cv.Scalar();
-        debugPrint("Before scalar.set(): " + scalar.toString());
-        await scalar.set([1, 2, 3, 3]);
-        debugPrint("After scalar.set(): " + scalar.toString());
-      } on Exception catch(e) {
+        cv.Range range = new cv.Range();
+        debugPrint("Before range.set(): " + range.toString());
+        await range.set([10, 20]);
+        debugPrint("After range.set(): " + range.toString());
+      } on Exception catch (e) {
         debugPrint(e.toString());
       }
-
-      // all()
-      try {
-        printSeparator("Testing all()");
-        cv.Scalar scalar = await cv.Scalar.all(3.0);
-        debugPrint("Scalar.all(3.0): " + scalar.toString());
-      } on Exception catch(e) {
-        debugPrint(e.toString());
-      }
-
-      // clone()
-      try {
-        printSeparator("Testing clone()");
-        cv.Scalar origin = new cv.Scalar.fromArray([1, 2, 3, 4]);
-        debugPrint("Before clone() -> origin: " + origin.toString() + " -> HashCode: " + origin.hashCode.toString());
-
-        cv.Scalar cloned = await origin.clone();
-        debugPrint("After clone() -> cloned: " + cloned.toString() + " -> HashCode: " + cloned.hashCode.toString());
-
-        bool isHashEquals = origin.hashCode == cloned.hashCode;
-        debugPrint("isHashEquals: " + isHashEquals.toString());
-
-        debugPrint("euquals operator: " + (origin == cloned).toString());
-      } on Exception catch(e) {
-        debugPrint(e.toString());
-      }
-
-      // mul(Scalar it)
-      try {
-        printSeparator("Testing mul(Scalar it)");
-        cv.Scalar origin = new cv.Scalar.fromArray([1, 2, 3, 4]);
-        debugPrint("Before mul() -> origin: " + origin.toString());
-
-        cv.Scalar multiplied = await origin.mul(origin);
-        debugPrint("After mul() -> multiplied: " + multiplied.toString());
-      } on Exception catch(e) {
-        debugPrint(e.toString());
-      }
-
-      // mul(Scalar it, double scale)
-      try {
-        printSeparator("Testing mul(Scalar it, double scale)");
-        cv.Scalar origin = new cv.Scalar.fromArray([1, 2, 3, 4]);
-        debugPrint("Before mul() -> origin: " + origin.toString());
-
-        cv.Scalar multiplied = await origin.mul(origin, 2.0);
-        debugPrint("After mul() -> multiplied: " + multiplied.toString());
-      } on Exception catch(e) {
-        debugPrint(e.toString());
-      }
-
-      // conj()
-      try {
-        printSeparator("Testing conj()");
-        cv.Scalar origin = new cv.Scalar.fromArray([1, 2, 3, 4]);
-        debugPrint("Before conj() -> origin: " + origin.toString());
-
-        cv.Scalar conjed = await origin.conj();
-        debugPrint("After conj() -> conjed: " + conjed.toString());
-      } on Exception catch(e) {
-        debugPrint(e.toString());
-      }
-
-      // isReal()
-      try {
-        printSeparator("Testing isReal()");
-        cv.Scalar scalar = new cv.Scalar(v0: 0, v1: 0, v2: 0/*,v3: 0*/);
-        bool result = await scalar.isReal();
-        debugPrint("scalar.isReal(): " + result.toString());
-      } on Exception catch(e) {
-        debugPrint(e.toString());
-      }
-      //____ End temp tests*/
     }
   }
 
@@ -167,5 +93,104 @@ class _MyAppState extends State<MyApp> {
     } on PlatformException {
       versionString = "Failed to get OpenCV version.";
     }
+  }
+
+  Future<void> testScalar() async {
+    if (TEST_SCALAR) {
+      printSeparator("TESTING SCALAR");
+      // set()
+      try {
+        printSeparator("Testing set()");
+        cv.Scalar scalar = new cv.Scalar();
+        debugPrint("Before scalar.set(): " + scalar.toString());
+        await scalar.set([1, 2, 3, 3]);
+        debugPrint("After scalar.set(): " + scalar.toString());
+      } on Exception catch (e) {
+        debugPrint(e.toString());
+      }
+
+      // all()
+      try {
+        printSeparator("Testing all()");
+        cv.Scalar scalar = await cv.Scalar.all(3.0);
+        debugPrint("Scalar.all(3.0): " + scalar.toString());
+      } on Exception catch (e) {
+        debugPrint(e.toString());
+      }
+
+      // clone()
+      try {
+        printSeparator("Testing clone()");
+        cv.Scalar origin = new cv.Scalar.fromArray([1, 2, 3, 4]);
+        debugPrint("Before clone() -> origin: " +
+            origin.toString() +
+            " -> HashCode: " +
+            origin.hashCode.toString());
+
+        cv.Scalar cloned = await origin.clone();
+        debugPrint("After clone() -> cloned: " +
+            cloned.toString() +
+            " -> HashCode: " +
+            cloned.hashCode.toString());
+
+        bool isHashEquals = origin.hashCode == cloned.hashCode;
+        debugPrint("isHashEquals: " + isHashEquals.toString());
+
+        debugPrint("euquals operator: " + (origin == cloned).toString());
+      } on Exception catch (e) {
+        debugPrint(e.toString());
+      }
+
+      // mul(Scalar it)
+      try {
+        printSeparator("Testing mul(Scalar it)");
+        cv.Scalar origin = new cv.Scalar.fromArray([1, 2, 3, 4]);
+        debugPrint("Before mul() -> origin: " + origin.toString());
+
+        cv.Scalar multiplied = await origin.mul(origin);
+        debugPrint("After mul() -> multiplied: " + multiplied.toString());
+      } on Exception catch (e) {
+        debugPrint(e.toString());
+      }
+
+      // mul(Scalar it, double scale)
+      try {
+        printSeparator("Testing mul(Scalar it, double scale)");
+        cv.Scalar origin = new cv.Scalar.fromArray([1, 2, 3, 4]);
+        debugPrint("Before mul() -> origin: " + origin.toString());
+
+        cv.Scalar multiplied = await origin.mul(origin, 2.0);
+        debugPrint("After mul() -> multiplied: " + multiplied.toString());
+      } on Exception catch (e) {
+        debugPrint(e.toString());
+      }
+
+      // conj()
+      try {
+        printSeparator("Testing conj()");
+        cv.Scalar origin = new cv.Scalar.fromArray([1, 2, 3, 4]);
+        debugPrint("Before conj() -> origin: " + origin.toString());
+
+        cv.Scalar conjed = await origin.conj();
+        debugPrint("After conj() -> conjed: " + conjed.toString());
+      } on Exception catch (e) {
+        debugPrint(e.toString());
+      }
+
+      // isReal()
+      try {
+        printSeparator("Testing isReal()");
+        cv.Scalar scalar = new cv.Scalar(v0: 0, v1: 0, v2: 0 /*,v3: 0*/);
+        bool result = await scalar.isReal();
+        debugPrint("scalar.isReal(): " + result.toString());
+      } on Exception catch (e) {
+        debugPrint(e.toString());
+      }
+      //____ End temp tests*/
+    }
+  }
+
+  void printSeparator(String s) {
+    print("\n--------------" + s + "--------------");
   }
 }

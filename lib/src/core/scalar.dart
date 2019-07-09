@@ -13,6 +13,7 @@ part 'scalar.g.dart';
 /// See: https://docs.opencv.org/3.4.3/d1/da0/classcv_1_1Scalar__.html
 ///
 /// See: http://bytedeco.org/javacpp-presets/opencv/apidocs/org/opencv/core/Scalar.html
+
 @JsonSerializable()
 class Scalar extends DataExchanger {
   //Fields__
@@ -28,7 +29,7 @@ class Scalar extends DataExchanger {
 
   Scalar.fromArray(this.val);
 
-  // Methods__
+  // Functions__
   Future<void> set(List<double> vals) async {
     setDataMap("Scalar", vals);
     String json = await DataExchanger.channel.invokeMethod("set", dataMap);
@@ -83,7 +84,7 @@ class Scalar extends DataExchanger {
   String getObjectAsJson() {
     return this.toJson().toString();
   }
-  
+
   @override
   String toString() {
     return 'Scalar{val: $val}';
@@ -96,5 +97,4 @@ class Scalar extends DataExchanger {
 
   @override
   int get hashCode => val.hashCode;
-
 }

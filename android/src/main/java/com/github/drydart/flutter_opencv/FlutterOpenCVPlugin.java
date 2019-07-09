@@ -5,7 +5,6 @@ import com.github.drydart.flutter_opencv.bridges.RangeBridge;
 import com.github.drydart.flutter_opencv.bridges.ScalarBridge;
 
 import org.bytedeco.javacpp.Loader;
-import org.opencv.core.Range;
 
 import java.util.Map;
 import java.util.Objects;
@@ -43,23 +42,21 @@ public class FlutterOpenCVPlugin implements MethodCallHandler {
     private void handleClass(final MethodCall call, final Result result) {
         Map<String, Object> map = call.arguments();
         String callingClass = (String) Objects.requireNonNull(map.get("class"));
+
         String method = call.method;
         Object arguments = Objects.requireNonNull(map.get("arguments"));
 
         switch (callingClass) {
             case "Information": {
-                InformationBridge bridge = new InformationBridge();
-                bridge.handleMethod(method, arguments, result);
+                new InformationBridge().handleMethod(method, arguments, result);
                 break;
             }
-            case "RangeBridge": {
-                RangeBridge bridge = new RangeBridge();
-                bridge.handleMethod(method, arguments, result);
+            case "Range": {
+                new RangeBridge().handleMethod(method, arguments, result);
                 break;
             }
             case "Scalar": {
-                ScalarBridge bridge = new ScalarBridge();
-                bridge.handleMethod(method, arguments, result);
+                new ScalarBridge().handleMethod(method, arguments, result);
                 break;
             }
             default: {

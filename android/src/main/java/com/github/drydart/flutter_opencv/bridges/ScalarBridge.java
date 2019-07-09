@@ -36,7 +36,6 @@ public class ScalarBridge extends IBridge {
                 Map<String, String> args = (Map<String, String>) arguments;
                 String json = args.get("json");
                 String scaleStr = args.get("scale");
-
                 Scalar originScalar = gson.fromJson(json, Scalar.class);
                 Scalar elaboratedScalar;
                 if (null == scaleStr) {
@@ -60,6 +59,18 @@ public class ScalarBridge extends IBridge {
                 Scalar originScalar = new Scalar(doubleList1.get(0), doubleList1.get(1),
                         doubleList1.get(2), doubleList1.get(3));
                 result.success(originScalar.isReal());
+                break;
+            }
+            case "hashCode": {
+                // TODO implement
+                break;
+            }
+            case "equals": {
+                // TODO implement
+                break;
+            }
+            case "toString": {
+                // TODO implement
                 break;
             }
             default: {
